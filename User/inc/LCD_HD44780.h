@@ -11,16 +11,16 @@
 
 ////////////////////////переопределени€////////////////////////////////////////
 //#define F_CPU 8000000L
-#define PORT_SIG 	  GPIOB//порт управлени€
+#define PORT_SIG 	  GPIOC//порт управлени€
 //#define DDR_SIG	      DDRB//
 //#define PIN_SIG   	  PINB//
-#define E      	      GPIO_Pin_4//строб
+#define RS  	      GPIO_Pin_0//1 передаем данные, 0 передаем команду
+#define E      	      GPIO_Pin_1//строб
 //#define RW	   	   	  PB1//направление:1 чтение диспле€, 0 запись в дисплей
-#define RS  	      GPIO_Pin_3//1 передаем данные, 0 передаем команду
-#define DB0					GPIO_Pin_5
-#define DB1					GPIO_Pin_6
-#define DB2					GPIO_Pin_7
-#define DB3					GPIO_Pin_8
+#define DB4					GPIO_Pin_2
+#define DB5		 			GPIO_Pin_3
+#define DB6					GPIO_Pin_4
+#define DB7					GPIO_Pin_5
 #define PORT_DATA	  PORT_SIG//порт данных
 //#define DDR_DATA	  DDRA//
 //#define PIN_DATA	  PINA//
@@ -30,6 +30,7 @@
 #define ON			  1//включение 
 #define OFF			  0//выключение
 #define BUS_LINE	  0x28//2 линии данных, 4 бита шина
+#define BUS_LINE1	  0x20//1 линии данных, 4 бита шина
 #define SEC_LINE	  0xA8//¬тора€ лини€ первый символ
 #define FIRS_LINE 	  0x80//ѕерва€ лини€ первый символ
 #define FIRST		  0x80//јдрес первой €чейки 
@@ -45,8 +46,9 @@
 #define ELEVENTH_S 	  0xB2//
 #define THIRTEENTH_S  0xCD//
 #define FIFTEENTH_S   0xB6//
-
-
+#define MASK_DATA 		0xFFC3
+#define MASK_LOW			0x00F0
+#define MASK_HIGH			0x000F
 
 //////////////////////////////////////функции///////////////////////////////
 void LCD_init_pin(void);//инициализаци€ портов дл€ диспле€

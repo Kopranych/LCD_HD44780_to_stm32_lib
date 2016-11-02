@@ -5,20 +5,32 @@
 #include "stm32f4xx.h"    
 #include <stdlib.h>
 
-GPIO_InitTypeDef PORT_LCD;// обьявляем структуру для инициализации портов
+
 
 void LCD_init_pin(void)
 {
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);//включаем тактирование шины AHB1 на ней порты D и A
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC|RCC_AHB1Periph_GPIOD, ENABLE);//включаем тактирование шины AHB1 на ней порты D и A
+	GPIO_InitTypeDef PORT_LCD;// обьявляем структуру для инициализации портов
 	
-	//Устанавливаем режимы работы порта E
-	PORT_LCD.GPIO_Pin = RS|E|DB0|DB1|DB2|DB3;
+	GPIO_InitTypeDef GPIO_D;// обьявляем структуру для инициализации портов
+	//Устанавливаем режимы работы порта D
+	GPIO_D.GPIO_Pin = GPIO_Pin_13;
+	GPIO_D.GPIO_Mode = GPIO_Mode_OUT;
+	GPIO_D.GPIO_Speed = GPIO_Low_Speed;
+	GPIO_D.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_D.GPIO_OType = GPIO_OType_PP;
+	
+	GPIO_Init(GPIOD, &GPIO_D);// иницифлизируем сами порты
+	
+	
+	//Устанавливаем режимы работы порта B
+	PORT_LCD.GPIO_Pin = RS|E|DB4|DB5|DB6|DB7;
 	PORT_LCD.GPIO_Mode = GPIO_Mode_OUT;
 	PORT_LCD.GPIO_Speed = GPIO_Low_Speed;
 	PORT_LCD.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	PORT_LCD.GPIO_OType = GPIO_OType_PP;
 	
-	GPIO_Init(GPIOE, &PORT_LCD);// инициализируем сами порты
+	GPIO_Init(GPIOC, &PORT_LCD);// инициализируем сами порты
 
 	
 }
@@ -28,17 +40,17 @@ void LCD_init_pin(void)
 void LCD_init(void)
 {	
 	delay_ms(40);//
-	PORT_LCD.GPIO_Mode = GPIO_Mode_OUT;//порты на //выход//управляющие порты //на выход
+//	PORT_LCD.GPIO_Mode = GPIO_Mode_OUT;//порты на //выход//управляющие порты //на выход
 	//PORT_SIG &= ~(ON<<RW);//порт чтения/записи  на запись
 	delay_ms(40);
-	LCD_write(BUS_LINE,RS_COM);//2 линии данных, 4 бита шина
-	LCD_write(BUS_LINE,RS_COM);
-	LCD_write(BUS_LINE,RS_COM);
-	LCD_write(BUS_LINE,RS_COM);
+	LCD_write(BUS_LINE1,RS_COM);//2 линии данных, 4 бита шина
+	LCD_write(BUS_LINE1,RS_COM);
+	LCD_write(BUS_LINE1,RS_COM);
+	LCD_write(BUS_LINE1,RS_COM);
 	LCD_write(0x01,RS_COM);//очистка экрана
 	LCD_write(0x06,RS_COM);//инкремент адреса экран не движется
 	
-	LCD_write(0x0C,RS_COM);//включить дисплей
+	LCD_write(0x0F,RS_COM);//включить дисплей
 
 }
 
@@ -46,7 +58,7 @@ void LCD_write(uint16_t data, uint8_t BIT_RS)
 {
 	delay_ms(40);
 //	LCD_read_BF();
-	PORT_LCD.GPIO_Mode = GPIO_Mode_OUT;//на выход
+//	PORT_LCD.GPIO_Mode = GPIO_Mode_OUT;//на выход
 //	PORT_SIG &= ~(ON<<RW);
 	if(BIT_RS == RS_COM)// если 0  
 	{
@@ -54,14 +66,15 @@ void LCD_write(uint16_t data, uint8_t BIT_RS)
 	} 
 	else GPIO_SetBits(PORT_SIG, RS);// иначе 1 то данные 
 	uint16_t tmp = data;//сохронили данные во временном
-	uint16_t temp = GPIOB->IDR & 0xFE1F;// очистили пины PB5,PB6,PB7,PB8 для записи туда данных
-	temp |= (data &0xFFF0)<<1;// обрезали младщую тетраду данных 
+	
+	uint16_t temp = GPIO_ReadInputData(PORT_DATA) & MASK_DATA;// очистили пины PB5,PB6,PB7,PB8 для записи туда данных
+	temp |= (data &MASK_LOW)>>2;// обрезали младщую тетраду данных 
 	GPIO_Write(PORT_DATA, temp);//выствали тетраду в порт
 	GPIO_SetBits(PORT_SIG, E);//строб вверх
 	delay_ms(2);
 	GPIO_ResetBits(PORT_SIG, E);//строб вниз старшая тетрада на дисплей 
-	temp = GPIOB->IDR & 0xFE1F;// очистили пины PB5,PB6,PB7,PB8 для записи туда данных
-	temp|= (tmp&0xFF0F)<<5;// обрезали старшую тетраду
+	temp = GPIO_ReadInputData(PORT_DATA) & MASK_DATA;// очистили пины PB5,PB6,PB7,PB8 для записи туда данныхх
+	temp|= (tmp & MASK_HIGH)<<2;// обрезали старшую тетраду
 	GPIO_Write(PORT_DATA, temp);//выставили младшую тетраду в порт
 	GPIO_SetBits(PORT_SIG, E);//строб вверх
 	delay_ms(2);
@@ -75,7 +88,7 @@ void LCD_write_adress(uint16_t data, uint16_t adress)
 	delay_ms(40);
 //	LCD_read_BF();
 	LCD_write(adress, RS_COM);
-	PORT_LCD.GPIO_Mode = GPIO_Mode_OUT;//на выход
+//	PORT_LCD.GPIO_Mode = GPIO_Mode_OUT;//на выход
 //	PORT_SIG &= ~(ON<<RW);
 	GPIO_SetBits(PORT_SIG, RS);// иначе 1 то данные 
 	uint16_t tmp = data;//сохронили данные во временном
