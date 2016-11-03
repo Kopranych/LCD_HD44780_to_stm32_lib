@@ -92,14 +92,14 @@ void LCD_write_adress(uint16_t data, uint16_t adress)
 //	PORT_SIG &= ~(ON<<RW);
 	GPIO_SetBits(PORT_SIG, RS);// иначе 1 то данные 
 	uint16_t tmp = data;//сохронили данные во временном
-	uint16_t temp = GPIOB->IDR & 0xFE1F;// очистили пины PB5,PB6,PB7,PB8 для записи туда данных
-	temp |= (data &0xFFF0)<<1;// обрезали младщую тетраду данных 
+	uint16_t temp = GPIO_ReadInputData(PORT_DATA) & MASK_DATA;// очистили пины PB5,PB6,PB7,PB8 для записи туда данных
+	temp |= (data &MASK_LOW)>>2;// обрезали младщую тетраду данных  
 	GPIO_Write(PORT_DATA, temp);//выствали тетраду в порт
 	GPIO_SetBits(PORT_SIG, E);//строб вверх
 	delay_ms(2);
 	GPIO_ResetBits(PORT_SIG, E);//строб вниз старшая тетрада на дисплей 
-	temp = GPIOB->IDR & 0xFE1F;// очистили пины PB5,PB6,PB7,PB8 для записи туда данных
-	temp|= (tmp&0xFF0F)<<5;// обрезали старшую тетраду
+	temp = GPIO_ReadInputData(PORT_DATA) & MASK_DATA;// очистили пины PB5,PB6,PB7,PB8 для записи туда данных
+	temp|= (tmp & MASK_HIGH)<<2;// обрезали старшую тетраду
 	GPIO_Write(PORT_DATA, temp);//выставили младшую тетраду в порт
 	GPIO_SetBits(PORT_SIG, E);//строб вверх
 	delay_ms(2);
@@ -228,6 +228,15 @@ void LCD_read_BF()
 }
 */
 
-
+void my_itoa(int value, char* buf, int base)
+	{
+	
+	int i = 30;
+	
+	buf = "";
+	
+	for(; value && i ; --i, value /= base) buf = "0123456789abcdef"[value % base] + buf;
+	
+}
 
 

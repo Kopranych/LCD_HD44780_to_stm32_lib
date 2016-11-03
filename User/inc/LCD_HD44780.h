@@ -61,6 +61,6 @@ void line_wrapping(int8_t number);//переключение на нужную строку
 void clean_display(void);//очистка дисплея
 void kursor_adress(uint8_t adress);//установка курсора на нужный адрес
 //void LCD_alignment(int16_t str, uint8_t adress);// функция выравнивания на дисплее значений
-
+void my_itoa(int value, char* buf, int base);// конвертируем число в строку
 
 #endif
