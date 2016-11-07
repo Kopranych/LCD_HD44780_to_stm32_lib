@@ -6,15 +6,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-int main()
+void main(void)
 {
 	init_delay();
 	delay_ms(100);
 	int8_t hour, minuts, second;
-	int8_t HOUR[2], MINUTS[2], SECOND[2];
+	char HOUR[2], MINUTS[2], SECOND[2];
 	LCD_init_pin();
 	LCD_init();
-
+	GPIO_SetBits(GPIOD, GPIO_Pin_13);
 	for(;;)
 	{
 		for(hour = 0; hour<24; hour++)
@@ -79,5 +79,5 @@ int main()
 			}
 		}
 	}
-	return 1;
+	return;
 }

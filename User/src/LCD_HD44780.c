@@ -9,8 +9,18 @@
 
 void LCD_init_pin(void)
 {
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC|RCC_AHB1Periph_GPIOD, ENABLE);//включаем тактирование шины AHB1 на ней порты D и A
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA|RCC_AHB1Periph_GPIOD, ENABLE);//включаем тактирование шины AHB1 на ней порты D и A
 	GPIO_InitTypeDef PORT_LCD;// обьявляем структуру для инициализации портов
+
+	//Устанавливаем режимы работы порта C
+	PORT_LCD.GPIO_Pin = RS|E|DB4|DB5|DB6|DB7;
+	PORT_LCD.GPIO_Mode = GPIO_Mode_OUT;
+	PORT_LCD.GPIO_Speed = GPIO_Low_Speed;
+	PORT_LCD.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	PORT_LCD.GPIO_OType = GPIO_OType_OD;
+	
+	GPIO_Init(GPIOA, &PORT_LCD);// инициализируем сами порты
+
 	
 	GPIO_InitTypeDef GPIO_D;// обьявляем структуру для инициализации портов
 	//Устанавливаем режимы работы порта D
@@ -23,14 +33,6 @@ void LCD_init_pin(void)
 	GPIO_Init(GPIOD, &GPIO_D);// иницифлизируем сами порты
 	
 	
-	//Устанавливаем режимы работы порта B
-	PORT_LCD.GPIO_Pin = RS|E|DB4|DB5|DB6|DB7;
-	PORT_LCD.GPIO_Mode = GPIO_Mode_OUT;
-	PORT_LCD.GPIO_Speed = GPIO_Low_Speed;
-	PORT_LCD.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	PORT_LCD.GPIO_OType = GPIO_OType_PP;
-	
-	GPIO_Init(GPIOC, &PORT_LCD);// инициализируем сами порты
 
 	
 }

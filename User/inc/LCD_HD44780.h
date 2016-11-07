@@ -1,4 +1,18 @@
 // Библиотека для работы с LCD HD44780 диспоеем
+/*
++---------------------------------------------------------------+
+| File    	     : LCD_HD44780.h                                |
+| Author  	 	   : Kopranych                                    |
+| Git repository : github.com/Kopranych/LCD_HD44780_to_stm32_lib|
+| Mail   			   : kopranych@gmail.ru                           |
+| Data    	     : 04/11/2016                                   |
+| Device   		   : STM32F4xx                                    |
+| Compiler 		   : MDK-ARM (Keil)                               |
+| Project  		   : LCD_44780                                    |
+| Version  	   	 : 1.0  							            			        |
+| Discription 	 : Library for working with LCD HD44780         |
++---------------------------------------------------------------+
+*/
 #ifndef LCD_HD44780_H_
 #define LCD_HD44780_H_
 
@@ -11,7 +25,7 @@
 
 ////////////////////////переопределения////////////////////////////////////////
 //#define F_CPU 8000000L
-#define PORT_SIG 	  GPIOC//порт управления
+#define PORT_SIG 	  GPIOA//порт управления
 //#define DDR_SIG	      DDRB//
 //#define PIN_SIG   	  PINB//
 #define RS  	      GPIO_Pin_0//1 передаем данные, 0 передаем команду
