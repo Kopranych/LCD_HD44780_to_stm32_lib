@@ -6,29 +6,31 @@
 #include <stdlib.h>
 #include <string.h>
 
-void main(void)
+int main(void)
 {
 	init_delay();
 	delay_ms(100);
-	int8_t hour, minuts, second;
-	char HOUR[2], MINUTS[2], SECOND[2];
+	int16_t hour, minuts, second;
+	int8_t HOUR[2], MINUTS[2], SECOND[2];
 	LCD_init_pin();
 	LCD_init();
 	GPIO_SetBits(GPIOD, GPIO_Pin_13);
+	LCD_write_str("Timer");
+	delay_ms(100);
 	for(;;)
 	{
 		for(hour = 0; hour<24; hour++)
 		{
 			if(hour<10)
 			{	
-				my_itoa(hour, HOUR, 10);
+				sprintf(HOUR, "%u",hour);
 				LCD_write_adress(0x30, FIRST);//
 				LCD_write_str(HOUR);
 				LCD_write(0x3A,RS_DATA);
 			}
 			else
 			{
-				my_itoa(hour, HOUR, 10);
+				sprintf(HOUR, "%u",hour);
 				kursor_adress(FIRST);
 				LCD_write_str(HOUR);
 				LCD_write(0x3A,RS_DATA);
@@ -37,14 +39,14 @@ void main(void)
 			{
 				if(minuts<10)
 				{
-					my_itoa(minuts, MINUTS, 10);
+					sprintf(MINUTS, "%u",minuts);
 					LCD_write_adress(0x30, FOURTH);
 					LCD_write_str(MINUTS);
 					LCD_write(0x3A,RS_DATA);
 				}
 				else
 				{
-					my_itoa(minuts, MINUTS, 10);
+					sprintf(MINUTS, "%u",minuts);
 					kursor_adress(FOURTH);
 					LCD_write_str(MINUTS);
 					LCD_write(0x3A,RS_DATA);
@@ -53,14 +55,15 @@ void main(void)
 				{
 					if(second<10)
 					{
-						my_itoa(second, SECOND, 10);
+						sprintf(SECOND, "%u",second);
 						LCD_write_adress(0x30, SEVENTH);
 						LCD_write_str(SECOND);
 					}
 					else 
 					{
+						sprintf(SECOND, "%u",second);
 						kursor_adress(SEVENTH);
-						my_itoa(second, SECOND, 10);
+//						my_itoa(second, SECOND, 10);
 						LCD_write_str(SECOND);
 					}
 					delay_ms(850);
@@ -79,5 +82,5 @@ void main(void)
 			}
 		}
 	}
-	return;
+	return 1;
 }

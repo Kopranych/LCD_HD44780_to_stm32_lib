@@ -52,11 +52,11 @@ void LCD_init(void)
 	LCD_write(0x01,RS_COM);//очистка экрана
 	LCD_write(0x06,RS_COM);//инкремент адреса экран не движется
 	
-	LCD_write(0x0F,RS_COM);//включить дисплей
+	LCD_write(0x0C,RS_COM);//включить дисплей
 
 }
 
-void LCD_write(uint16_t data, uint8_t BIT_RS)
+void LCD_write(uint16_t data, uint16_t BIT_RS)
 {
 	delay_ms(40);
 //	LCD_read_BF();

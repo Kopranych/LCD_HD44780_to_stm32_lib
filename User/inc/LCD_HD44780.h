@@ -67,7 +67,7 @@
 //////////////////////////////////////функции///////////////////////////////
 void LCD_init_pin(void);//инициализация портов для дисплея
 void LCD_init(void);//функция инициализации дисплея 
-void LCD_write(uint16_t data, uint8_t BIT_RS);//функция записи в дисплей
+void LCD_write(uint16_t data, uint16_t BIT_RS);//функция записи в дисплей
 void LCD_read_BF(void);//функция чтения флага BF готовности из дисплея на данном железе НЕ РАБОТАЕТ!!!делаем через delay)))
 void LCD_write_adress(uint16_t data, uint16_t adress);//функция записи в дисплей по конкретному адресу
 void LCD_write_str(int8_t *string);//запись строки на дисплей
